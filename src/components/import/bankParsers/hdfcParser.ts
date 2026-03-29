@@ -1,19 +1,19 @@
 import type { ParsedCSVRow } from '@/types'
 import { parseDate, toISODateString } from '@/utils/dateHelpers'
 
-// HDFC CSV columns: Date | Narration | Value Date | Debit Amount | Credit Amount | Chq/Ref Number | Closing Balance
+// HDFC CSV columns: Date | Narration | Chq./Ref.No. | Value Dt | Withdrawal Amt. | Deposit Amt. | Closing Balance
 // Date format: DD/MM/YY
 
 export function parseHDFC(rows: string[][]): ParsedCSVRow[] {
   const results: ParsedCSVRow[] = []
 
   for (const row of rows) {
-    if (row.length < 5) continue
+    if (row.length < 6) continue
 
     const rawDate = row[0]?.trim()
     const narration = row[1]?.trim()
-    const debitStr = row[3]?.trim().replace(/,/g, '')
-    const creditStr = row[4]?.trim().replace(/,/g, '')
+    const debitStr = row[4]?.trim().replace(/,/g, '')   // Withdrawal Amt.
+    const creditStr = row[5]?.trim().replace(/,/g, '')  // Deposit Amt.
 
     if (!rawDate || !narration) continue
 
