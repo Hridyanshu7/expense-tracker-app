@@ -27,6 +27,9 @@ dist-ssr/
 .DS_Store
 Thumbs.db
 
+# Claude Code
+.claude/
+
 # Supabase
 supabase/.branches
 supabase/.temp
