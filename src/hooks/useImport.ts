@@ -74,7 +74,11 @@ export function useImportFlow(existingTransactions: Transaction[]) {
           const parser = getBankParser(selectedBank)
           if (!parser) { toast.error('Parser not found for this bank'); return }
 
+          console.log('[Import] Total rows from PapaParse:', allRows.length)
+          console.log('[Import] First 3 rows:', allRows.slice(0, 3))
+          console.log('[Import] Sample data row (row 20):', allRows[20])
           const parsed = parser(allRows)
+          console.log('[Import] Parsed transactions:', parsed.length)
           if (parsed.length === 0) {
             toast.error('No transactions parsed — check the file format')
             return
