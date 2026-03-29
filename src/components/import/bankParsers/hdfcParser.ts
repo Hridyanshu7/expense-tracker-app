@@ -1,8 +1,16 @@
-import type { ParsedCSVRow } from '@/types'
+import type { ParsedCSVRow, PaymentMethod } from '@/types'
 import { parseDate, toISODateString } from '@/utils/dateHelpers'
 
 // HDFC CSV columns: Date | Narration | Chq./Ref.No. | Value Dt | Withdrawal Amt. | Deposit Amt. | Closing Balance
 // Date format: DD/MM/YY
+
+function detectMethod(narration: string): PaymentMethod {
+  const n = narration.toUpperCase()
+  if (n.startsWith('UPI-') || n.startsWith('UPI/')) return 'upi'
+  if (n.startsWith('NEFT') || n.startsWith('RTGS') || n.startsWith('IMPS') ||
+      n.startsWith('ACH') || n.startsWith('IB ') || n.startsWith('MB ')) return 'net_banking'
+  return 'net_banking'
+}
 
 export function parseHDFC(rows: string[][]): ParsedCSVRow[] {
   const results: ParsedCSVRow[] = []
@@ -41,7 +49,7 @@ export function parseHDFC(rows: string[][]): ParsedCSVRow[] {
       type: isDebit ? 'debit' : 'credit',
       raw_narration: narration,
       currency: 'INR',
-      method: 'net_banking',
+      method: detectMethod(narration),
       bank: 'hdfc',
     })
   }

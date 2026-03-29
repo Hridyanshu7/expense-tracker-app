@@ -53,6 +53,9 @@ export function useImportFlow(existingTransactions: Transaction[]) {
     if (!selectedBank) return
 
     Papa.parse<string[]>(file, {
+      header: false,
+      skipEmptyLines: true,
+      dynamicTyping: false,
       complete: (results) => {
         const allRows = results.data
 
